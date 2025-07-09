@@ -1,0 +1,94 @@
+<!--
+    SNAP & HEAL UI
+    Written by a real developer who cares about clean, friendly interfaces!
+    If you spot a bug, send me a coffee :)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SNAP & HEAL</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script>
+    // Loading spinner logic
+    function showSpinner() {
+        document.getElementById('loading-indicator').style.display = 'flex';
+    }
+    function hideSpinner() {
+        document.getElementById('loading-indicator').style.display = 'none';
+    }
+    window.onload = function() {
+        var form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                showSpinner();
+            });
+        }
+    }
+    </script>
+</head>
+<body>
+<div id="loading-indicator" class="spinner-overlay" style="display:none;">
+    <div class="spinner"></div>
+</div>
+<div class="container">
+    <h1>SNAP & HEAL</h1>
+    <form method="post" enctype="multipart/form-data" class="form-flex">
+        <div class="form-group">
+            <label for="injury_text">Describe the injury (optional):</label>
+            <textarea name="injury_text" id="injury_text" placeholder="e.g., Deep cut on the forearm, bleeding heavily">{{ injury_text|default('') }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="injury_image">Or upload an injury image (optional):</label>
+            <input type="file" name="injury_image" id="injury_image" accept="image/png, image/jpeg">
+        </div>
+        <div class="form-group">
+            <label for="language">Select language:</label>
+            <select name="language" id="language">
+                <option value="en" {% if language == 'en' %}selected{% endif %}>English</option>
+                <option value="hi" {% if language == 'hi' %}selected{% endif %}>Hindi</option>
+            </select>
+        </div>
+        <div class="form-group" style="text-align:center;">
+            <button type="submit" class="btn">Get First Aid Guidelines</button>
+        </div>
+    </form>
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    {% if uploaded_image_url %}
+        <div style="text-align:center; margin-top:15px;">
+            <img src="{{ uploaded_image_url }}" alt="Uploaded Injury Image" style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 8px;">
+        </div>
+    {% endif %}
+    {% if guidelines %}
+        <div class="guidelines-section beautiful-guidelines-card">
+            <div class="guidelines-header">
+                <span class="guidelines-icon">🩹</span>
+                <h2 class="guidelines-title">First Aid Guidelines</h2>
+            </div>
+            <div class="guidelines-content">{{ guidelines|safe }}</div>
+        </div>
+        <div class="disclaimer-section">
+            <strong>Very Important Disclaimer</strong><br>
+            The first aid suggestions provided by this AI assistant are for general informational purposes only. They are NOT a substitute for professional medical advice, diagnosis, or treatment.<br><br>
+            Always consult with a qualified healthcare professional regarding any medical condition or health concerns. Do not disregard or delay seeking professional medical advice because of information obtained from this application.
+        </div>
+    {% else %}
+        <div class="disclaimer-section">
+            <strong>Very Important Disclaimer</strong><br>
+            The first aid suggestions provided by this AI assistant are for general informational purposes only. They are NOT a substitute for professional medical advice, diagnosis, or treatment.<br><br>
+            Always consult with a qualified healthcare professional regarding any medical condition or health concerns. Do not disregard or delay seeking professional medical advice because of information obtained from this application.
+        </div>
+    {% endif %}
+    {# Debug Info hidden by request #}
+    {#
+    {% if debug_info %}
+        <div class="error" style="background:#fff3cd;color:#856404;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto;margin-top:20px;">
+            <strong>Debug Info:</strong><br>{{ debug_info|safe }}
+        </div>
+    {% endif %}
+    #}
+</div>
+</body>
+</html>
